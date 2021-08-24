@@ -25,7 +25,7 @@ echo "Building using $ncores cores."
 # Environment setup, uses cvmfs.
 
 echo "ls /cvmfs/fermilab.opensciencegrid.org/products/artdaq/"
-ls /cvmfs/fermilab.opensciencegrid.org/prodcuts/artdaq
+ls /cvmfs/fermilab.opensciencegrid.org/products/artdaq
 echo
 
 if [ -f /cvmfs/fermilab.opensciencegrid.org/products/artdaq/setup ]; then
@@ -89,7 +89,7 @@ source localProducts*/setup || exit 1
 set -x
 cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
-mrb g -r sbndqm@$SBN || exit 1
+mrb g -r sbndqm@$SBNDQM || exit 1
 
 if [ -z "$SBNCODE" ]; then
     # Extract sbncode version from sbncode product_deps
