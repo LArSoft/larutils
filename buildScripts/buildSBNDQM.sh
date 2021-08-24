@@ -24,15 +24,15 @@ echo "Building using $ncores cores."
 
 # Environment setup, uses cvmfs.
 
-echo "ls /cvmfs/fermilab.opensciencegrid.org"
-ls /cvmfs/fermilab.opensciencegrid.org
+echo "ls /cvmfs/fermilab.opensciencegrid.org/products/artdaq/"
+ls /cvmfs/fermilab.opensciencegrid.org/prodcuts/artdaq
 echo
 
-if [ -f /cvmfs/fermilab.opensciencegrid.org/artdaq/products/setup ]; then
+if [ -f /cvmfs/fermilab.opensciencegrid.org/products/artdaq/setup ]; then
   if [ -x /cvmfs/grid.cern.ch/util/cvmfs-uptodate ]; then
-    /cvmfs/grid.cern.ch/util/cvmfs-uptodate /cvmfs/fermilab.opensciencegrid.org/artdaq/products
+    /cvmfs/grid.cern.ch/util/cvmfs-uptodate /cvmfs/fermilab.opensciencegrid.org/products/artdaq
   fi
-  source /cvmfs/fermilab.opensciencegrid.org/artdaq/products/setup || exit 1
+  source /cvmfs/fermilab.opensciencegrid.org/products/artdaq/setup || exit 1
 else
   echo "No fermilab artdaq setup file found."
   exit 1
