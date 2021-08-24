@@ -7,7 +7,7 @@
 
 echo "sbndqm version: $SBNDQM_VERSION"
 echo "sbndqm tag: $SBNDQM"
-echo "sbncode tag: $SBNCODE"
+#echo "sbncode tag: $SBNCODE"
 echo "sbndaq_onlin tag: $SBNDAQ_ONLINE"
 echo "base qualifiers: $QUAL"
 echo "build type: $BUILDTYPE"
@@ -91,12 +91,13 @@ cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
 mrb g -r sbndqm@$SBNDQM || exit 1
 
-if [ -z "$SBNCODE" ]; then
-    # Extract sbncode version from sbncode product_deps
-    SBNCODE=`grep sbncode $MRB_SOURCE/sbndqm/ups/product_deps | grep -v qualifier | awk '{print $2}'`
-fi
-echo "sbncode version: $SBNCODE"
-mrb g -r sbncode@$SBNCODE || exit 1
+#don't pull sbncode
+#if [ -z "$SBNCODE" ]; then
+#    # Extract sbncode version from sbncode product_deps
+#    SBNCODE=`grep sbncode $MRB_SOURCE/sbndqm/ups/product_deps | grep -v qualifier | awk '{print $2}'`
+#fi
+#echo "sbncode version: $SBNCODE"
+#mrb g -r sbncode@$SBNCODE || exit 1
 
 if [ -z "$SBNDAQ_ONLINE" ]; then
     # Extract sbnobj version from sbncode product_deps
@@ -125,7 +126,7 @@ flvr=`ups flavor -4`
 # Construct name of larsoft manifest.
 
 sbncode_hyphen_qual=`echo $QUAL | tr : - | sed 's/-noifdh//'`
-sbncode_manifest=larsoft-${larsoft_dot_version}-${flvr}-${sbncode_hyphen_qual}-${BUILDTYPE}_MANIFEST.txt
+sbncode_manifest=sbn-${sbncode_dot_version}-${flvr}-${sbncode_hyphen_qual}-${BUILDTYPE}_MANIFEST.txt
 echo "sbncode manifest:"
 echo $sbncode_manifest
 echo
