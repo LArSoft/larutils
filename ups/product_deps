@@ -2,7 +2,7 @@
 
 # The *parent* line must the first non-commented line and defines this product and version
 # The version should be of the form vx_yy_zz (e.g. v1_02_03)
-parent larutils v1_28_00
+parent larutils v1_28_01
 # The no_fq_dir keyword indicates that this product is NULL flavored
 no_fq_dir
 
