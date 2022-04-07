@@ -1,0 +1,56 @@
+{
+   "configurePresets" : [
+      {
+         "cacheVariables" : {
+            "larutils_NOARCH_INIT" : {
+               "type" : "BOOL",
+               "value" : true
+            }
+         },
+         "description" : "Configuration settings translated from ups/product_deps",
+         "displayName" : "Configuration from product_deps",
+         "hidden" : true,
+         "name" : "from_product_deps"
+      },
+      {
+         "cacheVariables" : {
+            "WANT_UPS" : {
+               "type" : "BOOL",
+               "value" : true
+            },
+            "larutils_UPS_BUILD_ONLY_DEPENDENCIES_INIT" : {
+               "type" : "STRING",
+               "value" : "cetmodules"
+            },
+            "larutils_UPS_PRODUCT_FLAVOR_INIT" : {
+               "type" : "STRING",
+               "value" : "NULL"
+            },
+            "larutils_UPS_PRODUCT_NAME_INIT" : {
+               "type" : "STRING",
+               "value" : "larutils"
+            }
+         },
+         "description" : "Extra configuration for UPS package generation",
+         "displayName" : "UPS extra configuration",
+         "hidden" : true,
+         "name" : "extra_for_UPS"
+      },
+      {
+         "description" : "Default configuration including settings from ups/product_deps",
+         "displayName" : "Default configuration",
+         "inherits" : "from_product_deps",
+         "name" : "default"
+      },
+      {
+         "description" : "Default configuration for UPS package generation",
+         "displayName" : "Default configuration for UPS",
+         "inherits" : [
+            "default",
+            "extra_for_UPS"
+         ],
+         "name" : "for_UPS"
+      }
+   ],
+   "version" : 3
+}
