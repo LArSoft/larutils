@@ -30,7 +30,7 @@ bindir  product_dir    bin
 fcldir  -
 
 product          version
-cetbuildtools   v7_15_01       -       only_for_build
+cetbuildtools	v8_19_02	-	only_for_build
 end_product_list
 
 
