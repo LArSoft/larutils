@@ -2,12 +2,10 @@
 
 #  This simply copies files into an install directory - there is no build
 
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
-project(larutils LANGUAGES NONE)
-
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
+find_package(cetmodules REQUIRED)
+project(larutils VERSION 1.28.03 LANGUAGES NONE)
 
 include(CetCMakeEnv)
 
@@ -17,9 +15,7 @@ cet_cmake_env( noarch )
 # source code
 add_subdirectory(buildScripts)
 add_subdirectory(scripts)
-add_subdirectory(ups)
 
-# packaging utility
-include(UseCPack)
+cet_cmake_config(NO_CMAKE_CONFIG)
 
 
