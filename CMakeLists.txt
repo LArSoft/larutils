@@ -17,7 +17,6 @@ cet_cmake_env( noarch )
 # source code
 add_subdirectory(buildScripts)
 add_subdirectory(scripts)
-add_subdirectory(test)
 add_subdirectory(ups)
 
 # packaging utility
