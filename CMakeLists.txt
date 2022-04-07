@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 find_package(cetmodules REQUIRED)
-project(larutils VERSION 1.28.03 LANGUAGES NONE)
+project(larutils VERSION 1.29.00 LANGUAGES NONE)
 
 include(CetCMakeEnv)
 
