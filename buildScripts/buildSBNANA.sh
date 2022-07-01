@@ -81,12 +81,12 @@ cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
 mrb g -r sbnana@$SBNANA || exit 1
 
-#if [ -z "$SBNANAOBJ" ]; then
-#    # Extract sbananobj version from sbncode product_deps
-#    SBNANAOBJ=`grep sbnanaobj $MRB_SOURCE/sbnana/ups/product_deps | grep -v qualifier | awk '{print $2}'`
-#fi
-#echo "sbnanaobj version: $SBNANAOBJ"
-#mrb g -r sbnanaobj@$SBNANAOBJ || exit 1
+if [ -z "$SBNANAOBJ" ]; then
+   # Extract sbananobj version from sbncode product_deps
+   SBNANAOBJ=`grep sbnanaobj $MRB_SOURCE/sbnana/ups/product_deps | grep -v qualifier | awk '{print $2}'`
+fi
+echo "sbnanaobj version: $SBNANAOBJ"
+mrb g -r sbnanaobj@$SBNANAOBJ || exit 1
 
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
