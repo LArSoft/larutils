@@ -241,7 +241,7 @@ no_fq_dir
 #   entry to match for a given product.
 #
 product		version		qual	flags		<table_format=2>
-cetmodules	v3_09_03 	-	only_for_build
+cetmodules	v3_20_00 	-	only_for_build
 end_product_list
 ####################################
 
