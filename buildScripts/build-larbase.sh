@@ -50,7 +50,7 @@ labels=()
 for onequal in "${quals[@]}"; do
   if [[ "${onequal}" =~ ^([ec])([0-9]+)$ ]]; then
     basequal=${onequal}
-  elif [[ "${onequal}" =~ ^(s)([1-9][0-9]+)([a-z])$ ]]; then
+  elif [[ "${onequal}" =~ ^(s)([1-9][0-9]+)([a-z]*)$ ]]; then
     squal=${onequal}
   else
       labels+=${onequal}
