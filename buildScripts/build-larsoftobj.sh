@@ -140,6 +140,8 @@ elif [[ "${flvr}" == slf6 ]]; then
   fi
 fi
 
+export UPS_OVERRIDE='-H Linux64bit+3.10-2.17'
+
 dotver=`echo ${version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 
 echo "building the larsoftobj distribution for ${version} ${dotver} ${qual_set} ${build_type}"
