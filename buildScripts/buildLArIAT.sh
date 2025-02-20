@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# build lariatsoft, lariatutil and lbne_raw_data
-# use mrb
+# build lariatsoft, lariatutil and lariatfragments
+# use mrb v4
 # designed to work on Jenkins
 # this is a proof of concept script
 
-echo "lariatsoft version: $LARIAT"
-echo "base qualifiers: $QUAL"
-echo "larsoft qualifiers: $LARSOFT_QUAL"
-echo "build type: $BUILDTYPE"
-echo "workspace: $WORKSPACE"
+echo "lariatsoft version:  $LARIAT"
+echo "base qualifiers:     $QUAL"
+echo "larsoft qualifiers:  $LARSOFT_QUAL"
+echo "build type:          $BUILDTYPE"
+echo "workspace:           $WORKSPACE"
 
 # Don't do ifdh build on macos.
 
@@ -21,10 +21,7 @@ echo "workspace: $WORKSPACE"
 #fi
 
 # Get number of cores to use.
-
 if [ `uname` = Darwin ]; then
-  #ncores=`sysctl -n hw.ncpu`
-  #ncores=$(( $ncores / 4 ))
   ncores=4
 else
   ncores=`cat /proc/cpuinfo 2>/dev/null | grep -c -e '^processor'`
@@ -35,19 +32,14 @@ fi
 echo "Building using $ncores cores."
 
 # Environment setup, uses /grid/fermiapp or cvmfs.
-
-#echo "ls /cvmfs/lariat.opensciencegrid.org/products/lariat/"
-#ls /cvmfs/lariat.opensciencegrid.org/products/lariat/
-#echo
-
-if [ -f /grid/fermiapp/lariat/setup_lariat.sh ]; then
-  source /grid/fermiapp/lariat/setup_lariat.sh || exit 1
+if [ -f /cvmfs/lariat.opensciencegrid.org/setup_lariat.sh ]; then
+  source /cvmfs/lariat.opensciencegrid.org/setup_lariat.sh || exit 1
 else
   echo "No setup file found."
   exit 1
 fi
-# skip around a version of mrb that does not work on macOS
 
+# skip around a version of mrb that does not work on macOS
 if [ `uname` = Darwin ]; then
   if [[ x`which mrb | grep v1_17_02` != x ]]; then
     unsetup mrb || exit 1
@@ -55,14 +47,17 @@ if [ `uname` = Darwin ]; then
   fi
 fi
 
-# Use system git on macos.
+# Set up older mrb
+unsetup mrb
+setup mrb -o
 
+# Use system git on macos.
 if ! uname | grep -q Darwin; then
   setup git || exit 1
 fi
 setup gitflow || exit 1
 export MRB_PROJECT=lariat
-echo "Mrb path:"
+echo "MRB path:"
 which mrb
 
 set -x
@@ -72,6 +67,8 @@ mkdir -p $WORKSPACE/copyBack || exit 1
 rm -f $WORKSPACE/copyBack/* || exit 1
 cd $WORKSPACE/temp || exit 1
 mrb newDev -v $LARIAT -q $QUAL:$BUILDTYPE || exit 1
+
+COPYBACKDIR="$WORKSPACE/copyBack"
 
 set +x
 source localProducts*/setup || exit 1
@@ -92,18 +89,25 @@ fi
 
 set -x
 cd $MRB_SOURCE  || exit 1
-# make sure we get a read-only copy
-mrb g -r -t $LARIAT lariatsoft || exit 1
 
-# Extract lariatutil version from lariatsoft product_deps
+#==============================
+# Set up lariatsoft
+#==============================
+mrb g -d lariatsoft -t $LARIAT --repo-type github https://github.com/lariat/lariatsoft || exit 1
+
+#=============================
+# Set up lariatutil
+#=============================
 lariatutil_version=`grep lariatutil $MRB_SOURCE/lariatsoft/ups/product_deps | grep -v qualifier | awk '{print $2}'`
 echo "lariatuitil version: $lariatutil_version"
-mrb g -d lariatutil -t $lariatutil_version http://cdcvs.fnal.gov/projects/lardbt-lariatutil/ || exit 1
+mrb g -d lariatutil -t $lariatutil_version --repo-type github https://github.com/lariat/lariatutil || exit 1
 
-# Extract lariatfragments version from lariatsoft product_deps
+#=============================
+# Set up lariatfragments
+#=============================
 lariatfragments_version=`grep lariatfragments $MRB_SOURCE/lariatsoft/ups/product_deps | grep -v qualifier | awk '{print $2}'`
-echo "ubuitil version: $lariatfragments_version"
-mrb g -d lariatfragments -t $lariatfragments_version http://cdcvs.fnal.gov/projects/lariat-online-lariatfragments/ || exit 1
+echo "lariatfragments version: $lariatfragments_version"
+mrb g -d lariatfragments -t $lariatfragments_version --repo-type github https://github.com/lariat/lariatfragments || exit 1
 
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
@@ -147,34 +151,30 @@ larsoft_manifest=larsoft-${larsoft_dot_version}-${flvr}-${larsoft_hyphen_qual}-$
 echo "Larsoft manifest:"
 echo $larsoft_manifest
 echo
+mkdir -p $COPYBACKDIR
+TARGET="http://scisoft.fnal.gov/scisoft/bundles/larsoft/${larsoft_version}/manifest/${larsoft_manifest}"
+echo $TARGET
+
 
 # Fetch laraoft manifest from scisoft and append to lariatsoft manifest.
-
-curl --fail --silent --location --insecure http://scisoft.fnal.gov/scisoft/bundles/larsoft/${larsoft_version}/manifest/${larsoft_manifest} >> $manifest || exit 1
+#curl --fail --silent --location --insecure $TARGET >> $manifest || exit 1
 
 # Special handling of noifdh builds goes here.
-
 if echo $QUAL | grep -q noifdh; then
-
   if uname | grep -q Darwin; then
-
     # If this is a macos build, then rename the manifest to remove noifdh qualifier in the name
-
     noifdh_manifest=`echo $manifest | sed 's/-noifdh//'`
     mv $manifest $noifdh_manifest
-
   else
-
     # Otherwise (for slf builds), delete the manifest entirely.
-
     rm -f $manifest
-
   fi
 fi
 
 # Save artifacts.
-
-mv *.bz2  $WORKSPACE/copyBack/ || exit 1
+echo "Saving artifacts"
+echo "Moving all .bz2 to $COPYBACKDIR..."
+mv *.bz2  $COPYBACKDIR || exit 1
 manifest=lariat-*_MANIFEST.txt
 if [ -f $manifest ]; then
   mv $manifest  $WORKSPACE/copyBack/ || exit 1
