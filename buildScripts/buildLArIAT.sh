@@ -51,6 +51,8 @@ fi
 unsetup mrb
 setup mrb -o
 
+export UPS_OVERRIDE='-H Linux64bit+3.10-2.17'
+
 # Use system git on macos.
 if ! uname | grep -q Darwin; then
   setup git || exit 1
