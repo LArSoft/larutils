@@ -7,6 +7,7 @@
 
 echo "sbncode version: $SBN_VERSION"
 echo "sbncode tag: $SBN"
+echo "sbnalg tag: $SBNALG"
 echo "sbnobj tag: $SBNOBJ"
 echo "sbnanaobj tag: $SBNANAOBJ"
 echo "sbndaq_artdaq_core tag: $SBNDAQ_ARTDAQ_CORE"
@@ -83,6 +84,13 @@ cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
 mrb g -r sbncode@$SBN || exit 1
 
+if [ -z "$SBNALG" ]; then
+    # Extract sbnalg version from sbnalg product_deps
+    SBNALG=`grep sbnalg $MRB_SOURCE/sbncode/ups/product_deps | grep -v qualifier | awk '{print $2}'`
+fi
+echo "sbnalg version: $SBNALG"
+mrb g -r sbnalg@$SBNALG || exit 1
+
 if [ -z "$SBNOBJ" ]; then
     # Extract sbnobj version from sbncode product_deps
     SBNOBJ=`grep sbnobj $MRB_SOURCE/sbncode/ups/product_deps | grep -v qualifier | awk '{print $2}'`
@@ -91,7 +99,7 @@ echo "sbnobj version: $SBNOBJ"
 mrb g -r sbnobj@$SBNOBJ || exit 1
 
 if [ -z "$SBNANAOBJ" ]; then
-    # Extract sbnobj version from sbncode product_deps
+    # Extract sbnanaobj version from sbncode product_deps
     SBNANAOBJ=`grep sbnanaobj $MRB_SOURCE/sbncode/ups/product_deps | grep -v qualifier | awk '{print $2}'`
 fi
 echo "sbnanaobj version: $SBNANAOBJ"
